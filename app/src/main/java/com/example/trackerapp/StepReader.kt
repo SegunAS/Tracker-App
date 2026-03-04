@@ -4,13 +4,13 @@ import android.content.Context
 
 object StepReader {
     /**
-     * Return current steps count.
-     * If your StepCounterManager already stores steps somewhere, we read it here.
-     *
-     * For now: return -1 so you can paste your StepCounterManager and I wire it properly.
+     * Reads the last persisted step count from TrackerPrefs.
+     * This is useful for background tasks or when the StepCounterManager isn't active.
      */
-    fun getCurrentSteps(context: Context): Int {
-        // TODO: connect to your real step source
-        return -1
+    suspend fun getCurrentSteps(context: Context): Int {
+        val prefs = TrackerPrefs(context)
+        val savedSteps = prefs.getLastSteps()
+        // Return 0 if no steps have been recorded yet (getLastSteps returns -1 if empty)
+        return if (savedSteps < 0) 0 else savedSteps
     }
 }
